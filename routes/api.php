@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +30,6 @@ Route::group([
     Route::post('me', [AuthController::class,'me']);
     Route::post('reg', [AuthController::class,'reg']);
 
+    Route::resource('category', CategoryController::class);
+    Route::resource('book', BookController::class);
 });
