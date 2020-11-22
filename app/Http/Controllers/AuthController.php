@@ -43,11 +43,19 @@ class AuthController extends Controller
      */
     public function reg(Request $request)
     {
+        if ($request->name &&
+        $request->email &&
+        $request->password &&
+        $request->password2 &&
+        $request->password === $request->password2) {
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        } else {
+            return response()->json(['message' => 'wrong data']);
+        }
         return $user;
     }
 
