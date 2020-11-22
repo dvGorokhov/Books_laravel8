@@ -52,6 +52,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'client'
         ]);
         } else {
             return response()->json(['message' => 'wrong data']);
