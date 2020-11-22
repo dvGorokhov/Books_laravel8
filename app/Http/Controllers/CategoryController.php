@@ -14,17 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $category = Category::all();
+        return $category;
     }
 
     /**
@@ -35,7 +26,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ( $request->name && $request->url && $request->info) {
+            $category = Category::create([
+                'name' => $request->name,
+                'url' => $request->url,
+                'info' => $request->info
+              ]);
+            } else {
+                return response()->json(['err' => ['not found files']],400);
+            }
+        return $category;
     }
 
     /**
@@ -46,18 +46,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
+        return $category;
     }
 
     /**
@@ -69,7 +58,20 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        if (!$request->name && !$request->url && !$request->info){
+            return response()->json(['err' => ['one of the fields is not entered']],400);
+         }
+        if ($request->name) {
+            $category->name = $request->name;
+        } 
+        if ($request->info) {
+            $category->info = $request->info;
+        } 
+        if ($request->url){
+            $category->url = $request->url;
+        } 
+        $category->save();
+       return true;
     }
 
     /**
@@ -80,6 +82,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return true;
     }
 }
