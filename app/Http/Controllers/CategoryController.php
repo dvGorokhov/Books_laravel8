@@ -36,15 +36,35 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if ( $request->name && $request->url && $request->info) {
-            $category = Category::create([
-                'name' => $request->name,
-                'url' => $request->url,
-                'info' => $request->info
-              ]);
+        $name = $request->name;
+        $info = $request->info;
+        $url = $request->url;
+        if (!$name && !$info && !$url){
+            return response()->json(['err' => ['one of the fields is not entered']],400);
+         }
+        $category = Category::where('id',$request->id)->first();
+        if ($category) {
+            if ($name) {
+                $category->name = $name;
+            } 
+            if ($url){
+                $category->url = $url;
+            } 
+            if ($info){
+                $category->info = $info;
+            } 
+            $category->save();
+        } else {
+            if ($request->name && $request->url && $request->info) {
+                $category = Category::create([
+                    'name' => $request->name,
+                    'url' => $request->url,
+                    'info' => $request->info
+                  ]);
             } else {
                 return response()->json(['err' => ['not found files']],400);
             }
+        }
         return $category;
     }
 
