@@ -61,20 +61,17 @@ class CategoryController extends Controller
             $category->save();
         } else {
             if ($request->name  && $request->info) {
-                $category = Category::create([
-                    'name' => $request->name,
-                    'url' => '',
-                    'info' => $request->info
-                  ]);
-
                 if ($request->hasFile('img')) {
-                    if ($request->file('img')->isValid()) {
-                        $path = $request->img->store('images');
-                        $category->url = Storage::url($path);
-                        $category->save();
-                    }
+                    if ($request->file('img')->isValid() && $request->file('img')->getSize()<1024*500) {
+                        $category = Category::create([
+                            'name' => $request->name,
+                            'url' => Storage::url($request->img->store('images')),
+                            'info' => $request->info
+                          ]);
+                    } 
                 }
-            } else {
+            } 
+            if (!$category) {
                 return response()->json(['err' => ['not found files']],400);
             }
         }
