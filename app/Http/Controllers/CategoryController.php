@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -47,20 +48,32 @@ class CategoryController extends Controller
             if ($name) {
                 $category->name = $name;
             } 
-            if ($url){
-                $category->url = $url;
-            } 
+            if ($request->hasFile('img')) {
+                if ($request->file('img')->isValid()) {
+                    $path = $request->img->store('images');
+                    $category->url = Storage::url($path);
+                    $category->save();
+                }
+            }
             if ($info){
                 $category->info = $info;
             } 
             $category->save();
         } else {
-            if ($request->name && $request->url && $request->info) {
+            if ($request->name  && $request->info) {
                 $category = Category::create([
                     'name' => $request->name,
-                    'url' => $request->url,
+                    'url' => '',
                     'info' => $request->info
                   ]);
+
+                if ($request->hasFile('img')) {
+                    if ($request->file('img')->isValid()) {
+                        $path = $request->img->store('images');
+                        $category->url = Storage::url($path);
+                        $category->save();
+                    }
+                }
             } else {
                 return response()->json(['err' => ['not found files']],400);
             }
