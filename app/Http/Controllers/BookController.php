@@ -39,21 +39,63 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        if ( $request->name && $request->author &&
-             $request->info &&  $request->img && 
-             $request->category_id) {
-           $book = Book::create([
-                'name' => $request->name,
-                'author' => $request->author,
-                'info' => $request->info,
-                'img' => $request->img,
-                'category_id' => $request->category_id,
-                'year' => $request->year??null,
-                'user_id'=> Auth::id()
-              ]);
-            } else {
-                return response()->json(['err' => ['not found files']],400);
+        $name = $request->name;
+        $author = $request->author;
+        $info = $request->info;
+        $img = $request->img;
+        $year = $request->year;
+        $category_id = $request->category_id;
+
+        if ( !$name && !$author &&
+             !$info &&  !$img && 
+             !$category_id && !$year) {
+            return response()->json(['err' => ['not found files']],400);
+        }
+
+        if ($request->id) { 
+            if(!$book = Book::where('id',$request->id)->first()){
+                return response()->json(['err' => ['book not found']],400);
             }
+            if ($name) {
+                $book->name = $name;
+            }
+            if ($author) {
+                $book->author = $author;
+            }
+            if ($info) {
+                $book->info = $info;
+            }
+            if ($year) {
+                $book->year = $year;
+            }
+            if ($category_id) {
+                $book->category_id = $category_id;
+            }
+            if ($request->hasFile('img')) {
+                if ($request->file('img')->isValid()) {
+                    $path = $request->img->store('images');
+                    $book->url = Storage::url($path);
+                    $book->save();
+                }
+            }
+            $book->save();
+        } else {
+            if ($name && $author && $info && $category_id){
+                if ($request->hasFile('img')) {
+                  if ($request->file('img')->isValid() && $request->file('img')->getSize()<1024*500) {
+                    $book = Book::create([
+                        'name' => $request->name,
+                        'author' => $request->author,
+                        'info' => $request->info,
+                        'img' => $request->img,
+                        'category_id' => $request->category_id,
+                        'year' => $request->year??null,
+                        'user_id'=> Auth::id()
+                      ]);
+                    }
+                }
+            } 
+        }
         return $book;
     }
 

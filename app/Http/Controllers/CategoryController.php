@@ -49,7 +49,7 @@ class CategoryController extends Controller
                 $category->name = $name;
             } 
             if ($request->hasFile('img')) {
-                if ($request->file('img')->isValid()) {
+                if ($request->file('img')->isValid() && $request->file('img')->getSize()<1024*500) {
                     $path = $request->img->store('images');
                     $category->url = Storage::url($path);
                     $category->save();
