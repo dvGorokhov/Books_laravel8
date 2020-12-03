@@ -18,7 +18,7 @@ class BookController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index']]);
+        $this->middleware('auth:api', ['except' => ['index','show']]);
     }
 
     /**
@@ -108,7 +108,9 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return $book;
+        $arr = $book->toArray();
+        $arr['category_name'] = $book->getCategoryName();
+        return $arr;
     }
 
     /**
