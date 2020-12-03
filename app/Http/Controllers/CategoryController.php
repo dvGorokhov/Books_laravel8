@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +16,7 @@ class CategoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index']]);
+        $this->middleware('auth:api', ['except' => ['index','show']]);
     }
 
     /**
@@ -86,7 +87,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return $category;
+        $books = Book::where('category_id', $category->id)->get();
+        return ['books' => $books, 'info' => $category->info];
     }
 
     /**

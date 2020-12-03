@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -87,7 +88,7 @@ class BookController extends Controller
                         'name' => $request->name,
                         'author' => $request->author,
                         'info' => $request->info,
-                        'img' => $request->img,
+                        'img' => Storage::url($request->img->store('images')),
                         'category_id' => $request->category_id,
                         'year' => $request->year??null,
                         'user_id'=> Auth::id()
