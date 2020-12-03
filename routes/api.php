@@ -30,6 +30,8 @@ Route::group([
     Route::post('me', [AuthController::class,'me']);
     Route::post('reg', [AuthController::class,'reg']);
 
+    Route::get('category/{category}/sort/{type}', [CategoryController::class,'sort']);
+
     Route::resource('category', CategoryController::class);
     Route::resource('book', BookController::class);
 });

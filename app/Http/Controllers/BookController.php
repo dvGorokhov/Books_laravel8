@@ -114,6 +114,18 @@ class BookController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function sort()
+    {
+        $book = Book::orderBy('name', 'asc')->get();
+        return $book;
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

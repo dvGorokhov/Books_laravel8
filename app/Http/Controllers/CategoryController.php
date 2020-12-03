@@ -91,6 +91,13 @@ class CategoryController extends Controller
         return ['books' => $books, 'info' => $category->info];
     }
 
+    
+        public function sort(Category $category, String $type)
+    {
+        $books = Book::where('category_id', $category->id)->orderBy('name', $type)->get();
+        return $books;
+    }
+    
     /**
      * Update the specified resource in storage.
      *
