@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','show']]);
+        $this->middleware('auth:api', ['except' => ['index','show','sort']]);
     }
 
     /**
@@ -85,16 +85,23 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Category $category, Request $r)
     {
-        $books = Book::where('category_id', $category->id)->get();
+        $books = Book::where('category_id', $category->id)
+        ->orderBy('name', $r->sort)
+        ->Paginate(3);
         return ['books' => $books, 'info' => $category->info];
     }
 
-    
-        public function sort(Category $category, String $type)
+     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+        public function sort(Category $category, String $sort)
     {
-        $books = Book::where('category_id', $category->id)->orderBy('name', $type)->get();
+        $books = Book::where('category_id', $category->id)->orderBy('name', $sort)->Paginate(3);
         return $books;
     }
     
